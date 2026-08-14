@@ -1,6 +1,7 @@
 # Import python packages
 import streamlit as st
 from snowflake.snowpark.functions import col
+import requests
 
 # Write directly to the app
 st.title(f"Customize Your Smoothie! :cup_with_straw:")
@@ -26,8 +27,16 @@ ingredients_list = st.multiselect(
 if ingredients_list:
     ingredients_string = ''
 
-    for fruit_chosen in ingredients_list:
-        ingredients_string += fruit_chosen + ' '
+        for fruit_chosen in ingredients_list:
+        st.subheader(f"{fruit_chosen} Nutrition Information")
+        url = f"https://my.smoothiefroot.com/api/fruit/{fruit_chosen}"
+        try:
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+            fruit_data = response.json()
+            st.json(fruit_data)
+        except requests.exceptions.RequestException as e:
+            st.error(f"Could not retrieve {fruit_chosen}: {e}")
 
     st.text(ingredients_string)
 
