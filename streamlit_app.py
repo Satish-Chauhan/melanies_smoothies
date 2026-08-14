@@ -34,7 +34,7 @@ if ingredients_list:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
             fruit_data = response.json()
-            st.json(fruit_data)
+            st.dataframe(fruit_data, use_container_width=True)
         except requests.exceptions.RequestException as e:
             st.error(f"Could not retrieve {fruit_chosen}: {e}")
 
